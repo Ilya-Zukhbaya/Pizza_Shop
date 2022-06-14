@@ -1,27 +1,45 @@
-export function PizzaBlock(props) {
-  console.log(props);
+import React from 'react';
+
+export function PizzaBlock({ title, price, imageUrl, sizes, types }) {
+  // Передаем в sizes - массив из массива пицц, который содержит информацию о том, в каким размерах может бюыть пицца
+  const [activeSize, setActiveSize] = React.useState(0);
+
+  // Здесь хранится массив для определения типа пиццы и стейт для их переключения
+  const [activeType, setActiveType] = React.useState(0);
+  const typeNames = ['тонкое', 'традиционное'];
+
   return (
-    <div class="pizza-block">
-      <img
-        class="pizza-block__image"
-        src="https://dodopizza-a.akamaihd.net/static/Img/Products/Pizza/ru-RU/b750f576-4a83-48e6-a283-5a8efb68c35d.jpg"
-        alt="Pizza"
-      />
-      <h4 class="pizza-block__title">{props.title}</h4>
-      <div class="pizza-block__selector">
+    <div className="pizza-block">
+      <img className="pizza-block__image" src={imageUrl} alt={`Пицца: ${title}`} />
+      <h4 className="pizza-block__title">{title}</h4>
+      <div className="pizza-block__selector">
         <ul>
-          <li class="active">тонкое</li>
-          <li>традиционное</li>
+          {/* С помощью мар рендерим массив из типов теста пицц */}
+          {types.map((typeId, index) => (
+            <li
+              className={activeType === index ? 'active' : ''}
+              key={index}
+              onClick={() => setActiveType(index)}>
+              {/* Здесь, мы берем массив typeNames и внутри него помещаем значения 0 и 1 то есть typeId, сначала typeNames[0], [1] и так далее перебирая элементы*/}
+              {typeNames[typeId]}
+            </li>
+          ))}
         </ul>
         <ul>
-          <li class="active">26 см.</li>
-          <li>30 см.</li>
-          <li>40 см.</li>
+          {/* С помощью мар рендерим массив из sizes */}
+          {sizes.map((size, index) => (
+            <li
+              className={activeSize === index ? 'active' : ''}
+              key={index}
+              onClick={() => setActiveSize(index)}>
+              {size} см.
+            </li>
+          ))}
         </ul>
       </div>
-      <div class="pizza-block__bottom">
-        <div class="pizza-block__price">от {props.price} ₽</div>
-        <div class="button button--outline button--add">
+      <div className="pizza-block__bottom">
+        <div className="pizza-block__price">от {price} ₽</div>
+        <button className="button button--outline button--add">
           <svg
             width="12"
             height="12"
@@ -34,8 +52,8 @@ export function PizzaBlock(props) {
             />
           </svg>
           <span>Добавить</span>
-          <i>2</i>
-        </div>
+          <i>0</i>
+        </button>
       </div>
     </div>
   );
