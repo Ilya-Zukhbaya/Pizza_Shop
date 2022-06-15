@@ -18,7 +18,7 @@ export function PizzaBlock({ title, price, imageUrl, sizes, types }) {
           {types.map((typeId, index) => (
             <li
               className={activeType === index ? 'active' : ''}
-              key={index}
+              key={typeId}
               onClick={() => setActiveType(index)}>
               {/* Здесь, мы берем массив typeNames и внутри него помещаем значения 0 и 1 то есть typeId, сначала typeNames[0], [1] и так далее перебирая элементы*/}
               {typeNames[typeId]}

@@ -15,6 +15,7 @@ export function Categories() {
     <div className="categories">
       <ul>
         {categories.map((value, index) => (
+          // ечли массив статичный, можно в кей передевать индекс элементов, если динамической - как в typeId
           <li
             className={activeIndex === index ? 'active' : ''}
             onClick={() => onClickCategory(index)}
