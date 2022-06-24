@@ -8,6 +8,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @media (max-width: 645px) {
+      flex-direction: column;
+
+      .header__cart {
+        margin-top: 20px;
+      }
+    }
   }
 
   &__logo {
@@ -15,6 +23,8 @@
 
     img {
       margin-right: 15px;
+      max-width: 60px;
+      max-height: 60px;
     }
 
     h1 {

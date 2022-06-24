@@ -19,11 +19,12 @@ export const Home = () => {
         // После того, как мы перекинули пиццы с бэка в айтемс, можем изменить лоадинг на false
         setIsLoading(false);
       });
+    window.scrollTo(0, 0);
   }, []);
   const [isLoading, setIsLoading] = React.useState(true);
 
   return (
-    <>
+    <div className="container">
       <div className="content__top">
         <Categories />
         <Sort />
@@ -37,6 +38,6 @@ export const Home = () => {
           ? [...new Array(6)].map((_, index) => <Skeleton key={index} />)
           : items.map((obj) => <PizzaBlock {...obj} key={obj.id} />)}
       </div>
-    </>
+    </div>
   );
 };
