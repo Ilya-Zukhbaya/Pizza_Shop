@@ -1,14 +1,18 @@
+import { Link } from 'react-router-dom';
+
 export function Header() {
   return (
     <div className="header">
       <div className="container">
-        <div className="header__logo">
-          <img width="60" src="./myAvatar.ico" alt="Pizza logo" />
-          <div>
-            <h1>Pizza Market</h1>
-            <p>самая вкусная пицца во вселенной</p>
+        <Link to="/">
+          <div className="header__logo">
+            <img width="60" src="./myAvatar.ico" alt="Pizza logo" />
+            <div>
+              <h1>Pizza Market</h1>
+              <p>самая вкусная пицца во вселенной</p>
+            </div>
           </div>
-        </div>
+        </Link>
         <div className="header__cart">
           <a href="/cart.html" className="button button--cart">
             <span>520 ₽</span>
