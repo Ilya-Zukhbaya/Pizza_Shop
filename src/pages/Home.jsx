@@ -7,9 +7,24 @@ import Skeleton from '../components/PizzaBlock/Skeleton';
 export const Home = () => {
   // Сначала создаем стейт для того, чтобы получать туда данные из асинхроного бэка
   const [items, setItems] = React.useState([]);
+  // Создвем стейты сортировки и категорий для того, чтобы прокинуть их в <Category и Sort />
+  const [categoryId, setCategoryId] = React.useState(0);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [sortType, setSortType] = React.useState({
+    name: 'популярности',
+    sortProperty: 'rating',
+  });
+
   // Оборачиваем в юс эфеект, для того, чтобы не было множественных запросов из за перерисовки юз стейта, а всего один
   React.useEffect(() => {
-    fetch('https://62ab87fba62365888bde013d.mockapi.io/items')
+    setIsLoading(true);
+
+    const sortBy = sortType.sortProperty.replace('-', '');
+    const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
+    const category = categoryId > 0 ? `category=${categoryId}` : '';
+    fetch(
+      `https://62ab87fba62365888bde013d.mockapi.io/items?${category}&sortBy=${sortBy}&order=${order}`,
+    )
       .then((response) => {
         return response.json();
       })
@@ -20,14 +35,13 @@ export const Home = () => {
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
-  }, []);
-  const [isLoading, setIsLoading] = React.useState(true);
+  }, [categoryId, sortType]);
 
   return (
     <div className="container">
       <div className="content__top">
-        <Categories />
-        <Sort />
+        <Categories value={categoryId} onChangeCategory={(index) => setCategoryId(index)} />
+        <Sort value={sortType} onChangeSort={(i) => setSortType(i)} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">

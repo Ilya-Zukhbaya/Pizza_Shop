@@ -1,26 +1,20 @@
 import React from 'react';
 
-export function Categories() {
-  // Переключение между категориями пицц
-  const [activeIndex, setActiveIndex] = React.useState(0);
-
-  const onClickCategory = (index) => {
-    setActiveIndex(index);
-  };
-
+export function Categories({ value, onChangeCategory }) {
   // Создаем массив для переключения между категориями и рендера массива categories
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
   return (
     <div className="categories">
       <ul>
-        {categories.map((value, index) => (
+        {categories.map((categoryName, index) => (
           // ечли массив статичный, можно в кей передевать индекс элементов, если динамической - как в typeId
           <li
-            className={activeIndex === index ? 'active' : ''}
-            onClick={() => onClickCategory(index)}
+            // Теперь мы храним активный индекс в value
+            className={value === index ? 'active' : ''}
+            onClick={() => onChangeCategory(index)}
             key={index}>
-            {value}
+            {categoryName}
           </li>
         ))}
       </ul>
