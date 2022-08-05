@@ -1,7 +1,11 @@
 import React from 'react';
 import styles from './Search.module.scss';
+import { SearchContext } from '../../App';
 
-export const Search = ({ searchValue, setSearchValue }) => {
+export const Search = () => {
+  // Хук юсКонтекст будет ссылаться на переменную createContext
+  const { searchValue, setSearchValue } = React.useContext(SearchContext);
+
   return (
     <div className={styles.root}>
       <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" className={styles.icon}>

@@ -1,19 +1,27 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSort } from '../redux/slices/filterSlice';
 
-export function Sort({ value, onChangeSort }) {
+const list = [
+  { name: 'популярности (уб)', sortProperty: 'rating' },
+  { name: 'популярности (возр)', sortProperty: '-rating' },
+  { name: 'цене (уб)', sortProperty: 'price' },
+  { name: 'цене (возр)', sortProperty: '-price' },
+  { name: 'алфавиту (уб)', sortProperty: 'title' },
+  { name: 'алфавиту (возр)', sortProperty: '-title' },
+];
+
+export function Sort() {
+  // прописываем хук useDispatch в константу, для того, чтобы использовать его для изменения изначального состояния, прописанного в слайсе
+  const dispatch = useDispatch();
+  // хук useSelector отвечает за вытаскивание значения из слайса, примерно как useSelector
+  const sort = useSelector((state) => state.filter.sort);
   const [open, setOpen] = React.useState(false);
-  const list = [
-    { name: 'популярности (уб)', sortProperty: 'rating' },
-    { name: 'популярности (возр)', sortProperty: '-rating' },
-    { name: 'цене (уб)', sortProperty: 'price' },
-    { name: 'цене (возр)', sortProperty: '-price' },
-    { name: 'алфавиту (уб)', sortProperty: 'title' },
-    { name: 'алфавиту (возр)', sortProperty: '-title' },
-  ];
 
   // Сначала мы выбираем в попапе определемнную категорую, а затем передаем false в open
-  const onClickListItem = (i) => {
-    onChangeSort(i);
+  const onClickListItem = (obj) => {
+    // action setSort меняет объект {name: '', sortProperty: ''}
+    dispatch(setSort(obj));
     setOpen(false);
   };
 
@@ -32,7 +40,7 @@ export function Sort({ value, onChangeSort }) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{value.name}</span>
+        <span onClick={() => setOpen(!open)}>{sort.name}</span>
       </div>
       {/* Условный рендеринг, если слева false правая часть скрыта */}
       {open && (
@@ -40,8 +48,9 @@ export function Sort({ value, onChangeSort }) {
           <ul>
             {list.map((obj, i) => (
               <li
-                className={value.sortProperty === obj.sortProperty ? 'active' : ''}
+                className={sort.sortProperty === obj.sortProperty ? 'active' : ''}
                 key={i}
+                // При клике на obj, мы записываем значение текущего obj в slice (sort)
                 onClick={() => onClickListItem(obj)}>
                 {obj.name}
               </li>

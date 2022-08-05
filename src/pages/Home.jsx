@@ -1,28 +1,33 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { Categories } from '../components/Categories';
 import { Sort } from '../components/Sort';
 import { PizzaBlock } from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import { Pagination } from '../Pagination';
+import { SearchContext } from '../App';
+import { setCategoryId } from '../redux/slices/filterSlice';
 
-export const Home = ({ searchValue }) => {
+export const Home = () => {
+  const { categoryId, sort } = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
+  const onChangeCategory = (id) => {
+    dispatch(setCategoryId(id));
+  };
+
   // Сначала создаем стейт для того, чтобы получать туда данные из асинхроного бэка
   const [items, setItems] = React.useState([]);
-  // Создвем стейты сортировки и категорий для того, чтобы прокинуть их в <Category и Sort />
-  const [categoryId, setCategoryId] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [sortType, setSortType] = React.useState({
-    name: 'популярности',
-    sortProperty: 'rating',
-  });
   const [currentPage, setCurrentPage] = React.useState(1);
+  const { searchValue } = React.useContext(SearchContext);
 
   // Оборачиваем в юс эфеект, для того, чтобы не было множественных запросов из за перерисовки юз стейта, а всего один
   React.useEffect(() => {
     setIsLoading(true);
 
-    const sortBy = sortType.sortProperty.replace('-', '');
-    const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
+    const sortBy = sort.sortProperty.replace('-', '');
+    const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
     fetch(
@@ -38,26 +43,17 @@ export const Home = ({ searchValue }) => {
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
-  }, [categoryId, sortType, searchValue, currentPage]);
+  }, [categoryId, sort.sortProperty, searchValue, currentPage]);
 
-  const pizzaz = items
-    // С помощью фильтра мы ищем похожие тайтлы и переводим их в ловер, чтобы искалось все
-    // .filter((obj) => {
-    //   if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
-    //     return true;
-    //   }
-
-    //   return false;
-    // })
-    .map((obj) => <PizzaBlock {...obj} key={obj.id} />);
+  const pizzaz = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />);
 
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 
   return (
     <div className="container">
       <div className="content__top">
-        <Categories value={categoryId} onChangeCategory={(index) => setCategoryId(index)} />
-        <Sort value={sortType} onChangeSort={(i) => setSortType(i)} />
+        <Categories value={categoryId} onChangeCategory={onChangeCategory} />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
