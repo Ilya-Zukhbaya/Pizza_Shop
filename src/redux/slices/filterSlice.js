@@ -8,6 +8,7 @@ const initialState = {
     name: 'популярности',
     sortProperty: 'rating',
   },
+  pageCount: 1,
 };
 
 const filterSlice = createSlice({
@@ -21,11 +22,14 @@ const filterSlice = createSlice({
     setSort(state, action) {
       state.sort = action.payload;
     },
+    setPageCount(state, action) {
+      state.pageCount = action.payload;
+    },
   },
 });
 
 // экспортируем actions для их дальнейшего примения в компонентах
-export const { setCategoryId, setSort } = filterSlice.actions;
+export const { setCategoryId, setSort, setPageCount } = filterSlice.actions;
 
 // экспортируем по дефолту слайс.редюсер для его добавления в стор
 export default filterSlice.reducer;

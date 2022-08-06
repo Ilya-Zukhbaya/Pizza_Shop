@@ -1,10 +1,24 @@
 import React from 'react';
 import styles from './Search.module.scss';
+import debounce from 'lodash.debounce';
 import { SearchContext } from '../../App';
 
 export const Search = () => {
+  const [value, setValue] = React.useState('');
   // Хук юсКонтекст будет ссылаться на переменную createContext
-  const { searchValue, setSearchValue } = React.useContext(SearchContext);
+  const { setSearchValue } = React.useContext(SearchContext);
+
+  const updateSearchValue = React.useCallback(
+    debounce((str) => {
+      setSearchValue(str);
+    }, 750),
+    [],
+  );
+
+  const onChangeInput = (event) => {
+    setValue(event.target.value);
+    updateSearchValue(event.target.value);
+  };
 
   return (
     <div className={styles.root}>
@@ -17,12 +31,12 @@ export const Search = () => {
         </g>
       </svg>
       <input
-        value={searchValue}
+        value={value}
         type="search"
         placeholder="Поиск пиццы..."
         className={styles.input}
         // Для того, чтобы получать значения из Контролируемого инпута, мы используем таргет вэлью и это значаение помещаем в нам стейт
-        onChange={(event) => setSearchValue(event.target.value)}
+        onChange={onChangeInput}
       />
     </div>
   );
