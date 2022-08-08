@@ -25,11 +25,16 @@ const filterSlice = createSlice({
     setPageCount(state, action) {
       state.pageCount = action.payload;
     },
+    setFilters(state, action) {
+      state.pageCount = Number(action.payload.pageCount);
+      state.sort = action.payload.sort;
+      state.categoryId = Number(action.payload.categoryId);
+    },
   },
 });
 
 // экспортируем actions для их дальнейшего примения в компонентах
-export const { setCategoryId, setSort, setPageCount } = filterSlice.actions;
+export const { setCategoryId, setSort, setPageCount, setFilters } = filterSlice.actions;
 
 // экспортируем по дефолту слайс.редюсер для его добавления в стор
 export default filterSlice.reducer;

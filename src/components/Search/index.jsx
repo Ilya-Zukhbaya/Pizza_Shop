@@ -4,11 +4,14 @@ import debounce from 'lodash.debounce';
 import { SearchContext } from '../../App';
 
 export const Search = () => {
+  // Создаем стейт, для того, чтобы локально хранить значения поиска и не мешать глобальному поиску, который отправляется на бэк
   const [value, setValue] = React.useState('');
   // Хук юсКонтекст будет ссылаться на переменную createContext
   const { setSearchValue } = React.useContext(SearchContext);
 
+  // Хук useCallback работает примерно как useContext, зависимости будут в массиве, и  от них зависит, как будет работать функция внутри
   const updateSearchValue = React.useCallback(
+    // через дебоунс задаем задержку в 750 милисек. перед тем, как мы будем отправлять данные на бэк
     debounce((str) => {
       setSearchValue(str);
     }, 750),

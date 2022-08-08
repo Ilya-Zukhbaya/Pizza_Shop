@@ -1,21 +1,30 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
 import axios from 'axios';
+import qs from 'qs';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { Categories } from '../components/Categories';
-import { Sort } from '../components/Sort';
+import { Sort, sortList } from '../components/Sort';
 import { PizzaBlock } from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 
 import { Pagination } from '../Pagination';
 import { SearchContext } from '../App';
 
-import { setCategoryId, setPageCount } from '../redux/slices/filterSlice';
+import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
 
 export const Home = () => {
+  const navigate = useNavigate();
+
+  const isSearch = React.useRef(false);
+  const isMounted = React.useRef(false);
+
+  // достам из нашего слайса первоначальные значения через юсСелектор
   const { categoryId, sort, pageCount } = useSelector((state) => state.filter);
   const dispatch = useDispatch();
+
+  // Создаем функции для изменения изначальных значений через диспатч
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
   };
@@ -28,8 +37,7 @@ export const Home = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const { searchValue } = React.useContext(SearchContext);
 
-  // Оборачиваем в юс эфеект, для того, чтобы не было множественных запросов из за перерисовки юз стейта, а всего один
-  React.useEffect(() => {
+  const fetchPizzas = () => {
     setIsLoading(true);
 
     const sortBy = sort.sortProperty.replace('-', '');
@@ -46,7 +54,45 @@ export const Home = () => {
         // После того, как мы перекинули пиццы с бэка в айтемс, можем изменить лоадинг на false
         setIsLoading(false);
       });
+  };
+  //  Если изменили параметры и был первый рендер
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortProperty: sort.sortProperty,
+        categoryId,
+        pageCount,
+      });
+
+      navigate(`?${queryString}`);
+    }
+
+    isMounted.current = true;
+  }, [categoryId, sort.sortProperty, pageCount]);
+
+  //  Если был первый рендер, то проверяем юрл параметры и сохраняем их в редуксе
+  React.useEffect(() => {
+    if (
+      window.location.search &&
+      window.location.search !== '?sortProperty=rating&categoryId=0&pageCount=1'
+    ) {
+      const params = qs.parse(window.location.search.substring(1));
+      const sort = sortList.find((obj) => obj.sortProperty === params.sortProperty);
+
+      dispatch(setFilters({ ...params, sort }));
+      isSearch.current = true;
+    }
+  }, []);
+
+  // Если был первый рендер, то запрашиваем пиццы
+  React.useEffect(() => {
     window.scrollTo(0, 0);
+
+    if (!isSearch.current) {
+      fetchPizzas();
+    }
+
+    isSearch.current = false;
   }, [categoryId, sort.sortProperty, searchValue, pageCount]);
 
   const pizzaz = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />);
