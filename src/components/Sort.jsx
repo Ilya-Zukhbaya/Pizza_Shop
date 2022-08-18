@@ -18,6 +18,8 @@ export function Sort() {
   const sort = useSelector((state) => state.filter.sort);
   const [open, setOpen] = React.useState(false);
 
+  const sortRef = React.useRef();
+
   // Сначала мы выбираем в попапе определемнную категорую, а затем передаем false в open
   const onClickListItem = (obj) => {
     // action setSort меняет объект {name: '', sortProperty: ''}
@@ -25,8 +27,19 @@ export function Sort() {
     setOpen(false);
   };
 
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      let path = event.composedPath().includes(sortRef.current);
+      if (!path) setOpen(false);
+    };
+
+    document.body.addEventListener('click', handleClickOutside);
+
+    return () => document.body.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return (
-    <div className="sort">
+    <div className="sort" ref={sortRef}>
       <div className="sort__label">
         <svg
           width="10"
