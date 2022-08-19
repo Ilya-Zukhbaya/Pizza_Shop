@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import qs from 'qs';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +12,7 @@ import { Pagination } from '../Pagination';
 import { SearchContext } from '../App';
 
 import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
+import { fetchPizzas } from '../redux/slices/pizzaSlice';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -22,6 +22,7 @@ export const Home = () => {
 
   // достам из нашего слайса первоначальные значения через юсСелектор
   const { categoryId, sort, pageCount } = useSelector((state) => state.filter);
+  const { items, status } = useSelector((state) => state.pizza);
   const dispatch = useDispatch();
 
   // Создаем функции для изменения изначальных значений через диспатч
@@ -33,27 +34,23 @@ export const Home = () => {
   };
 
   // Сначала создаем стейт для того, чтобы получать туда данные из асинхроного бэка
-  const [items, setItems] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
   const { searchValue } = React.useContext(SearchContext);
 
-  const fetchPizzas = () => {
-    setIsLoading(true);
-
+  const getPizzas = async () => {
     const sortBy = sort.sortProperty.replace('-', '');
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
-    axios
-      .get(
-        `https://62ab87fba62365888bde013d.mockapi.io/items?page=${pageCount}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`,
-      )
-      .then((response) => {
-        // Здесь мы используем сэтАйтемс чтобы обновлять список пицц
-        setItems(response.data);
-        // После того, как мы перекинули пиццы с бэка в айтемс, можем изменить лоадинг на false
-        setIsLoading(false);
-      });
+
+    dispatch(
+      fetchPizzas({
+        sortBy,
+        order,
+        category,
+        search,
+        pageCount,
+      }),
+    );
   };
   //  Если изменили параметры и был первый рендер
   React.useEffect(() => {
@@ -89,7 +86,7 @@ export const Home = () => {
     window.scrollTo(0, 0);
 
     if (!isSearch.current) {
-      fetchPizzas();
+      getPizzas();
     }
 
     isSearch.current = false;
@@ -106,12 +103,18 @@ export const Home = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">
-        {/* obj внутри метода мар, позволяет вытащить значения, которые хранятся в каждой пицце в json */}
-        {/* // Если мы уверены что названиния здешних параметров будет совпадать с теми, откуда мы их и достаем, до можно просто передать целый объект, а в пропсах вытаскивать значения (spread-оператор) */}
-        {/* Если исЛоадинг = true, создаем фейк массив и подгружаем его, a если в items есть пиццы, то подгружаем их*/}
-        {isLoading ? skeletons : pizzaz}
-      </div>
+      {status === 'error' ? (
+        <div>
+          <h2>Произошла ошибка 😕</h2>
+          <p>
+            К сожалению, нк удалось получить пиццы. Попробуйте повторить попытку позже
+            <br />
+            Для того, чтобы заказать пиццу, перейди на главную страницу.
+          </p>
+        </div>
+      ) : (
+        <div className="content__items">{status === 'loading' ? skeletons : pizzaz}</div>
+      )}
       <Pagination onChangePage={onChangePage} />
     </div>
   );
