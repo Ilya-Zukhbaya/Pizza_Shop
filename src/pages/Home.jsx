@@ -11,19 +11,19 @@ import Skeleton from '../components/PizzaBlock/Skeleton';
 import { Pagination } from '../Pagination';
 import { SearchContext } from '../App';
 
-import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzas } from '../redux/slices/pizzaSlice';
+import { setCategoryId, setPageCount, setFilters, selectFilter } from '../redux/slices/filterSlice';
+import { fetchPizzas, selectPizza } from '../redux/slices/pizzaSlice';
 
 export const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
 
   // достам из нашего слайса первоначальные значения через юсСелектор
-  const { categoryId, sort, pageCount } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizza);
-  const dispatch = useDispatch();
+  const { categoryId, sort, pageCount, searchValue } = useSelector(selectFilter);
+  const { items, status } = useSelector(selectPizza);
 
   // Создаем функции для изменения изначальных значений через диспатч
   const onChangeCategory = (id) => {
@@ -32,9 +32,6 @@ export const Home = () => {
   const onChangePage = (number) => {
     dispatch(setPageCount(number));
   };
-
-  // Сначала создаем стейт для того, чтобы получать туда данные из асинхроного бэка
-  const { searchValue } = React.useContext(SearchContext);
 
   const getPizzas = async () => {
     const sortBy = sort.sortProperty.replace('-', '');

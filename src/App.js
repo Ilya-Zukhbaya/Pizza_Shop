@@ -11,23 +11,17 @@ import { NotFound } from './pages/NotFound';
 export const SearchContext = React.createContext();
 
 function App() {
-  // создаем стейт дя поиска и дальнейшей фильтрации пицц
-  const [searchValue, setSearchValue] = React.useState('');
-
   return (
     <div className="wrapper">
-      {/* Оборачиваем  все в провайдер для того, чтобы определить территорию контекста*/}
-      <SearchContext.Provider value={{ searchValue, setSearchValue }}>
-        <Header />
-        <div className="content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cart" element={<Cart />} />
-            {/* если ни один из этих роутов не подошел, рендерим нот фаунд */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </SearchContext.Provider>
+      <Header />
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          {/* если ни один из этих роутов не подошел, рендерим нот фаунд */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
     </div>
   );
 }

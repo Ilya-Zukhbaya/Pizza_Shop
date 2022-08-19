@@ -9,6 +9,7 @@ const initialState = {
     sortProperty: 'rating',
   },
   pageCount: 1,
+  searchValue: '',
 };
 
 const filterSlice = createSlice({
@@ -25,6 +26,9 @@ const filterSlice = createSlice({
     setPageCount(state, action) {
       state.pageCount = action.payload;
     },
+    setSearchValue(state, action) {
+      state.searchValue = action.payload;
+    },
     setFilters(state, action) {
       state.pageCount = Number(action.payload.pageCount);
       state.sort = action.payload.sort;
@@ -33,8 +37,11 @@ const filterSlice = createSlice({
   },
 });
 
+export const selectFilter = (state) => state.filter;
+
 // экспортируем actions для их дальнейшего примения в компонентах
-export const { setCategoryId, setSort, setPageCount, setFilters } = filterSlice.actions;
+export const { setCategoryId, setSort, setPageCount, setFilters, setSearchValue } =
+  filterSlice.actions;
 
 // экспортируем по дефолту слайс.редюсер для его добавления в стор
 export default filterSlice.reducer;

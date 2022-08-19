@@ -2,12 +2,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const fetchPizzas = createAsyncThunk('pizza/fetchPizzasStatus', async (params) => {
+export const fetchPizzas = createAsyncThunk('pizza/fetchPizzasStatus', async (params, thunkAPI) => {
   const { sortBy, order, category, search, pageCount } = params;
   const { data } = await axios.get(
     `https://62ab87fba62365888bde013d.mockapi.io/items?page=${pageCount}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`,
   );
-  return data;
+
+  if (data.lenght === 0) {
+    return thunkAPI.rejectWithValue('Invalid');
+  }
+  return thunkAPI.fulfillWithValue(data);
 });
 
 // обязательно нужно обозначить initialState, т.к он как в useState будет хранить изначальное значение
@@ -36,5 +40,6 @@ const pizzaSlice = createSlice({
   },
 });
 
+export const selectPizza = (state) => state.pizza;
 // экспортируем по дефолту слайс.редюсер для его добавления в стор
 export default pizzaSlice.reducer;
