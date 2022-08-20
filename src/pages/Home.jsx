@@ -88,11 +88,7 @@ export const Home = () => {
     isSearch.current = false;
   }, [categoryId, sort.sortProperty, searchValue, pageCount]);
 
-  const pizzaz = items.map((obj) => (
-    <Link to={`pizza/${obj.id}`} key={obj.id}>
-      <PizzaBlock {...obj} />
-    </Link>
-  ));
+  const pizzaz = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />);
 
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 

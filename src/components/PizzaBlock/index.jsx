@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { addItem, selectCartItemById } from '../../redux/slices/cartSlice';
+import { Link } from 'react-router-dom';
 
 export function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
   // Передаем в sizes - массив из массива пицц, который содержит информацию о том, в каким размерах может бюыть пицца
@@ -30,8 +31,10 @@ export function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
   return (
     <div className="pizza-block-wrapper">
       <div className="pizza-block">
-        <img className="pizza-block__image" src={imageUrl} alt={`Пицца: ${title}`} />
-        <h4 className="pizza-block__title">{title}</h4>
+        <Link to={`pizza/${id}`}>
+          <img className="pizza-block__image" src={imageUrl} alt={`Пицца: ${title}`} />
+          <h4 className="pizza-block__title">{title}</h4>
+        </Link>
         <div className="pizza-block__selector">
           <ul>
             {/* С помощью мар рендерим массив из типов теста пицц */}
