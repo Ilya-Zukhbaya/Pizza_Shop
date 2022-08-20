@@ -1,7 +1,7 @@
 import React from 'react';
 import qs from 'qs';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { Categories } from '../components/Categories';
 import { Sort, sortList } from '../components/Sort';
@@ -9,7 +9,6 @@ import { PizzaBlock } from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 
 import { Pagination } from '../Pagination';
-import { SearchContext } from '../App';
 
 import { setCategoryId, setPageCount, setFilters, selectFilter } from '../redux/slices/filterSlice';
 import { fetchPizzas, selectPizza } from '../redux/slices/pizzaSlice';
@@ -89,7 +88,11 @@ export const Home = () => {
     isSearch.current = false;
   }, [categoryId, sort.sortProperty, searchValue, pageCount]);
 
-  const pizzaz = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />);
+  const pizzaz = items.map((obj) => (
+    <Link to={`pizza/${obj.id}`} key={obj.id}>
+      <PizzaBlock {...obj} />
+    </Link>
+  ));
 
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 
