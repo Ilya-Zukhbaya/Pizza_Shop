@@ -115,7 +115,7 @@ export const Home = () => {
       ) : (
         <div className="content__items">{status === 'loading' ? skeletons : pizzaz}</div>
       )}
-      <Pagination onChangePage={onChangePage} />
+      <Pagination onChangePage={onChangePage} pageCount={pageCount} />
     </div>
   );
 };
