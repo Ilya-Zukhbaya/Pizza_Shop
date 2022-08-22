@@ -1,7 +1,7 @@
 import React from 'react';
 import qs from 'qs';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Categories } from '../components/Categories';
 import { Sort, sortList } from '../components/Sort';
@@ -13,7 +13,7 @@ import { Pagination } from '../Pagination';
 import { setCategoryId, setPageCount, setFilters, selectFilter } from '../redux/slices/filterSlice';
 import { fetchPizzas, selectPizza } from '../redux/slices/pizzaSlice';
 
-export const Home = () => {
+export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,11 +25,11 @@ export const Home = () => {
   const { items, status } = useSelector(selectPizza);
 
   // Создаем функции для изменения изначальных значений через диспатч
-  const onChangeCategory = (id) => {
+  const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id));
   };
-  const onChangePage = (number) => {
-    dispatch(setPageCount(number));
+  const onChangePage = (page: number) => {
+    dispatch(setPageCount(page));
   };
 
   const getPizzas = async () => {
@@ -39,6 +39,7 @@ export const Home = () => {
     const search = searchValue ? `&search=${searchValue}` : '';
 
     dispatch(
+      // @ts-ignore
       fetchPizzas({
         sortBy,
         order,
@@ -88,7 +89,7 @@ export const Home = () => {
     isSearch.current = false;
   }, [categoryId, sort.sortProperty, searchValue, pageCount]);
 
-  const pizzaz = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />);
+  const pizzaz = items.map((obj: any) => <PizzaBlock {...obj} key={obj.id} />);
 
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 

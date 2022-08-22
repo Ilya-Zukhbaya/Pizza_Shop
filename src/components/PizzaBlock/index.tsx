@@ -4,15 +4,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addItem, selectCartItemById } from '../../redux/slices/cartSlice';
 import { Link } from 'react-router-dom';
 
-export function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
+type PizzaBlockProps = {
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  types: number[];
+  sizes: number[];
+};
+
+export const PizzaBlock: React.FC<PizzaBlockProps> = ({
+  id,
+  title,
+  price,
+  imageUrl,
+  sizes,
+  types,
+}) => {
   // Передаем в sizes - массив из массива пицц, который содержит информацию о том, в каким размерах может бюыть пицца
-  const [activeSize, setActiveSize] = React.useState(0);
+  const [activeSize, setActiveSize] = React.useState<number>(0);
   const typeNames = ['тонкое', 'традиционное'];
   const cartItem = useSelector(selectCartItemById(id));
   const addedCount = cartItem ? cartItem.count : 0;
 
   // Здесь хранится массив для определения типа пиццы и стейт для их переключения
-  const [activeType, setActiveType] = React.useState(0);
+  const [activeType, setActiveType] = React.useState<number>(0);
 
   const dispatch = useDispatch();
 
@@ -81,4 +97,4 @@ export function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
       </div>
     </div>
   );
-}
+};

@@ -1,6 +1,11 @@
 import React from 'react';
 
-export function Categories({ value, onChangeCategory }) {
+type CategoriesProps = {
+  value: number;
+  onChangeCategory: any;
+};
+
+export const Categories: React.FC<CategoriesProps> = ({ value, onChangeCategory }) => {
   // Создаем массив для переключения между категориями и рендера массива categories
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
@@ -20,4 +25,4 @@ export function Categories({ value, onChangeCategory }) {
       </ul>
     </div>
   );
-}
+};

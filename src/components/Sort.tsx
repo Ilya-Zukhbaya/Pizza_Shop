@@ -1,8 +1,13 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSort } from '../redux/slices/filterSlice';
+import { selectSort, setSort } from '../redux/slices/filterSlice';
 
-export const sortList = [
+type SortItem = {
+  name: string;
+  sortProperty: string;
+};
+
+export const sortList: SortItem[] = [
   { name: 'популярности (уб)', sortProperty: 'rating' },
   { name: 'популярности (возр)', sortProperty: '-rating' },
   { name: 'цене (уб)', sortProperty: 'price' },
@@ -15,20 +20,20 @@ export function Sort() {
   // прописываем хук useDispatch в константу, для того, чтобы использовать его для изменения изначального состояния, прописанного в слайсе
   const dispatch = useDispatch();
   // хук useSelector отвечает за вытаскивание значения из слайса, примерно как useSelector
-  const sort = useSelector((state) => state.filter.sort);
+  const sort = useSelector(selectSort);
   const [open, setOpen] = React.useState(false);
 
-  const sortRef = React.useRef();
+  const sortRef = React.useRef<HTMLDivElement>(null);
 
   // Сначала мы выбираем в попапе определемнную категорую, а затем передаем false в open
-  const onClickListItem = (obj) => {
+  const onClickListItem = (obj: SortItem) => {
     // action setSort меняет объект {name: '', sortProperty: ''}
     dispatch(setSort(obj));
     setOpen(false);
   };
 
   React.useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       let path = event.composedPath().includes(sortRef.current);
       if (!path) setOpen(false);
     };

@@ -1,4 +1,3 @@
-import React from 'react';
 import './scss/app.scss';
 
 import { Routes, Route } from 'react-router-dom';
@@ -7,9 +6,6 @@ import { Cart } from './pages/Cart';
 import { NotFound } from './pages/NotFound';
 import { FullPizza } from './pages/FullPizza';
 import { MainLayout } from './layouts/MainLayout';
-
-// Создаем контекст для того чтобы прокидывать значение без props-drilling и экспортируем его напрямую в компонент Search
-export const SearchContext = React.createContext();
 
 function App() {
   return (

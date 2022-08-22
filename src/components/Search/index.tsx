@@ -4,20 +4,20 @@ import debounce from 'lodash.debounce';
 import { setSearchValue } from '../../redux/slices/filterSlice';
 import { useDispatch } from 'react-redux';
 
-export const Search = () => {
+export const Search: React.FC = () => {
   const dispatch = useDispatch();
   // Создаем стейт, для того, чтобы локально хранить значения поиска и не мешать глобальному поиску, который отправляется на бэк
   const [value, setValue] = React.useState('');
   // Хук useCallback работает примерно как useContext, зависимости будут в массиве, и  от них зависит, как будет работать функция внутри
   const updateSearchValue = React.useCallback(
     // через дебоунс задаем задержку в 750 милисек. перед тем, как мы будем отправлять данные на бэк
-    debounce((str) => {
+    debounce((str: string) => {
       dispatch(setSearchValue(str));
     }, 750),
     [],
   );
 
-  const onChangeInput = (event) => {
+  const onChangeInput = (event: any) => {
     setValue(event.target.value);
     updateSearchValue(event.target.value);
   };
