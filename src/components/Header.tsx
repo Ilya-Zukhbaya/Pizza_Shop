@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Search } from './Search';
 import { useSelector } from 'react-redux';
@@ -8,6 +9,7 @@ import cartLogo from '../assets/img/cartLogo.svg';
 export function Header() {
   const { items, totalPrice } = useSelector(selectCart);
   const location = useLocation();
+  const isMounted = React.useRef(false);
 
   const totalCount: number = items.reduce(
     (
@@ -18,6 +20,15 @@ export function Header() {
     ) => sum + item.count,
     0,
   );
+
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const json = JSON.stringify(items);
+      localStorage.setItem('cart', json);
+    }
+    isMounted.current = true;
+  }, [items]);
+
   return (
     <div className="header">
       <div className="container">

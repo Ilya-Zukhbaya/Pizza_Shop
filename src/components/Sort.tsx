@@ -1,22 +1,22 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectSort, setSort } from '../redux/slices/filterSlice';
+import { selectSort, setSort, SortPropertyEnum } from '../redux/slices/filterSlice';
 
 type SortItem = {
   name: string;
-  sortProperty: string;
+  sortProperty: SortPropertyEnum;
 };
 
 export const sortList: SortItem[] = [
-  { name: 'популярности (уб)', sortProperty: 'rating' },
-  { name: 'популярности (возр)', sortProperty: '-rating' },
-  { name: 'цене (уб)', sortProperty: 'price' },
-  { name: 'цене (возр)', sortProperty: '-price' },
-  { name: 'алфавиту (уб)', sortProperty: 'title' },
-  { name: 'алфавиту (возр)', sortProperty: '-title' },
+  { name: 'популярности (уб)', sortProperty: SortPropertyEnum.RATING_DESC },
+  { name: 'популярности (возр)', sortProperty: SortPropertyEnum.RATING_ASC },
+  { name: 'цене (уб)', sortProperty: SortPropertyEnum.PRICE_DESC },
+  { name: 'цене (возр)', sortProperty: SortPropertyEnum.PRICE_ASC },
+  { name: 'алфавиту (уб)', sortProperty: SortPropertyEnum.TITLE_DESC },
+  { name: 'алфавиту (возр)', sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
 
-export function Sort() {
+export function SortPopup() {
   // прописываем хук useDispatch в константу, для того, чтобы использовать его для изменения изначального состояния, прописанного в слайсе
   const dispatch = useDispatch();
   // хук useSelector отвечает за вытаскивание значения из слайса, примерно как useSelector

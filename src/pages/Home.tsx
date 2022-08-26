@@ -1,21 +1,22 @@
 import React from 'react';
-import qs from 'qs';
-import { useSelector, useDispatch } from 'react-redux';
+// import qs from 'qs';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Categories } from '../components/Categories';
-import { Sort, sortList } from '../components/Sort';
+import { SortPopup, sortList } from '../components/Sort';
 import { PizzaBlock } from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 
 import { Pagination } from '../Pagination';
 
 import { setCategoryId, setPageCount, setFilters, selectFilter } from '../redux/slices/filterSlice';
-import { fetchPizzas, selectPizza } from '../redux/slices/pizzaSlice';
+import { fetchPizzas, SearchPizzaParams, selectPizza } from '../redux/slices/pizzaSlice';
+import { useAppDispatch } from '../redux/store';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
@@ -39,44 +40,50 @@ export const Home: React.FC = () => {
     const search = searchValue ? `&search=${searchValue}` : '';
 
     dispatch(
-      // @ts-ignore
       fetchPizzas({
         sortBy,
         order,
         category,
         search,
-        pageCount,
+        pageCount: String(pageCount),
       }),
     );
   };
   //  Если изменили параметры и был первый рендер
-  React.useEffect(() => {
-    if (isMounted.current) {
-      const queryString = qs.stringify({
-        sortProperty: sort.sortProperty,
-        categoryId,
-        pageCount,
-      });
+  // React.useEffect(() => {
+  //   if (isMounted.current) {
+  //     const queryString = qs.stringify({
+  //       sortProperty: sort.sortProperty,
+  //       categoryId,
+  //       pageCount,
+  //     });
 
-      navigate(`?${queryString}`);
-    }
+  //     navigate(`?${queryString}`);
+  //   }
 
-    isMounted.current = true;
-  }, [categoryId, sort.sortProperty, pageCount]);
+  //   isMounted.current = true;
+  // }, [categoryId, sort.sortProperty, pageCount]);
 
-  //  Если был первый рендер, то проверяем юрл параметры и сохраняем их в редуксе
-  React.useEffect(() => {
-    if (
-      window.location.search &&
-      window.location.search !== '?sortProperty=rating&categoryId=0&pageCount=1'
-    ) {
-      const params = qs.parse(window.location.search.substring(1));
-      const sort = sortList.find((obj) => obj.sortProperty === params.sortProperty);
+  // //  Если был первый рендер, то проверяем юрл параметры и сохраняем их в редуксе
+  // React.useEffect(() => {
+  //   if (
+  //     window.location.search &&
+  //     window.location.search !== '?sortProperty=rating&categoryId=0&pageCount=1'
+  //   ) {
+  //     const params = qs.parse(window.location.search.substring(1)) as unknown as SearchPizzaParams;
+  //     const sort = sortList.find((obj) => obj.sortProperty === params.sortBy);
 
-      dispatch(setFilters({ ...params, sort }));
-      isSearch.current = true;
-    }
-  }, []);
+  //     dispatch(
+  //       setFilters({
+  //         searchValue: params.search,
+  //         categoryId: Number(params.category),
+  //         pageCount: Number(params.pageCount),
+  //         sort: sort || sortList[0],
+  //       }),
+  //     );
+  //     isSearch.current = true;
+  //   }
+  // }, []);
 
   // Если был первый рендер, то запрашиваем пиццы
   React.useEffect(() => {
@@ -97,7 +104,7 @@ export const Home: React.FC = () => {
     <div className="container">
       <div className="content__top">
         <Categories value={categoryId} onChangeCategory={onChangeCategory} />
-        <Sort />
+        <SortPopup />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === 'error' ? (
