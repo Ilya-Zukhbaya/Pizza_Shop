@@ -1,3 +1,5 @@
+$widthMAX: 400px;
+$widthMIN: 200px;
 .root {
   position: relative;
 }
@@ -5,7 +7,7 @@
 .input {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 12px 20px;
-  width: 400px;
+  width: $widthMAX;
   border-radius: 10px;
   font-size: 16px;
   padding-left: 42px;
@@ -13,14 +15,31 @@
 
   &:focus {
     border: 1px solid rgba(0, 0, 0, 0.2);
-    width: 430px;
+    width: $widthMAX + 30px;
   }
 }
 .icon {
+  @media (max-width: 645px) {
+    margin-top: 40px;
+  }
   width: 24px;
   height: 24px;
   opacity: 0.3;
   position: absolute;
   left: 12px;
   top: 12px;
+}
+@media (max-width: 645px) {
+  .input {
+    margin-top: 40px;
+    &:focus {
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      width: $widthMIN + 30px;
+    }
+  }
+}
+@media (max-width: 450px) {
+  .input {
+    width: $widthMIN;
+  }
 }
