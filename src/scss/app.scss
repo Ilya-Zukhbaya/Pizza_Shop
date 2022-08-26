@@ -473,6 +473,9 @@ body {
   .cart__item-count {
     width: 20%;
   }
+  .FullPizza {
+    max-width: 350px;
+  }
 }
 @media (max-width: 560px) {
   .cart__bottom-buttons .go-back-btn {
@@ -485,6 +488,9 @@ body {
     width: 130px;
     font-size: 12px;
   }
+  .FullPizza {
+    max-width: 300px;
+  }
 }
 @media (max-width: 365px) {
   .cart__bottom-buttons .go-back-btn {
@@ -496,5 +502,8 @@ body {
   .cart__bottom-buttons .pay-btn {
     width: 110px;
     font-size: 10px;
+  }
+  .FullPizza {
+    max-width: 200px;
   }
 }
